@@ -2,9 +2,9 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { useLenis } from "./hooks/useLenis";
 import Hero from "./components/sections/Hero";
+import VideoCarousel from "./components/sections/VideoCarousel";
 import VehicleTransform from "./components/sections/VehicleTransform";
 import Transformation from "./components/sections/Transformation";
-import ValueProps from "./components/sections/ValueProps";
 import HowItWorks from "./components/sections/HowItWorks";
 import ProductShowcase from "./components/sections/ProductShowcase";
 // StickerPack is temporarily unmounted per request; component kept for later use.
@@ -22,10 +22,10 @@ function App() {
       <Header />
       <main>
         <Hero />
+        <VideoCarousel />
         <VehicleTransform />
         <HowItWorks />
         <ProductShowcase />
-        <ValueProps />
         <CustomStickerPacks />
         <Transformation />
         <OrderCTA />

@@ -1,111 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
-
-function SpeakerMutedIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-3.5 w-3.5">
-      <path d="M4 9v6h4l5 4V5L8 9H4z" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M16 9l4 6M20 9l-4 6" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function SpeakerOnIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-3.5 w-3.5">
-      <path d="M4 9v6h4l5 4V5L8 9H4z" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M16.5 8.5a5 5 0 010 7 M19 6a8.5 8.5 0 010 12" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MobileVideo({ src, label }: { src: string; label: string }) {
-  const [muted, setMuted] = useState(true);
-
-  return (
-    <div className="w-28">
-      <div className="relative overflow-hidden rounded-xl border border-white/15 shadow-[0_15px_40px_-12px_rgba(0,0,0,0.8)]">
-        <video
-          src={src}
-          autoPlay
-          muted={muted}
-          loop
-          playsInline
-          className="aspect-square w-full bg-black object-cover"
-        />
-        <button
-          type="button"
-          onClick={() => setMuted((m) => !m)}
-          className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white backdrop-blur"
-          aria-label={muted ? "Unmute video" : "Mute video"}
-        >
-          {muted ? <SpeakerMutedIcon /> : <SpeakerOnIcon />}
-        </button>
-      </div>
-      <p className="mt-1.5 text-center font-body text-[10px] font-semibold uppercase tracking-widest text-white/50">
-        {label}
-      </p>
-    </div>
-  );
-}
-
-function FloatingVideo({
-  src,
-  aspectClass,
-  widthClass,
-  label,
-  floatDelay,
-  floatDuration,
-  rotate,
-  className,
-}: {
-  src: string;
-  aspectClass: string;
-  widthClass: string;
-  label: string;
-  floatDelay: number;
-  floatDuration: number;
-  rotate: number;
-  className: string;
-}) {
-  const [muted, setMuted] = useState(true);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30, rotate: 0 }}
-      animate={{ opacity: 1, y: [0, -14, 0], rotate }}
-      transition={{
-        opacity: { duration: 0.8, delay: 0.6 },
-        rotate: { duration: 0.8, delay: 0.6 },
-        y: { duration: floatDuration, delay: floatDelay, repeat: Infinity, ease: "easeInOut" },
-      }}
-      className={`absolute z-10 ${widthClass} ${className}`}
-    >
-      <div className="relative overflow-hidden rounded-2xl border border-white/15 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
-        <video
-          src={src}
-          autoPlay
-          muted={muted}
-          loop
-          playsInline
-          className={`${aspectClass} w-full bg-black object-cover`}
-        />
-        <button
-          type="button"
-          onClick={() => setMuted((m) => !m)}
-          className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white backdrop-blur transition hover:border-white/50"
-          aria-label={muted ? "Unmute video" : "Mute video"}
-        >
-          {muted ? <SpeakerMutedIcon /> : <SpeakerOnIcon />}
-        </button>
-      </div>
-      <p className="mt-2 text-center font-body text-[10px] font-semibold uppercase tracking-widest text-white/50">
-        {label}
-      </p>
-    </motion.div>
-  );
-}
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -178,28 +73,6 @@ export default function Hero() {
         className="pointer-events-none absolute -left-24 -top-24 -z-10 h-48 w-48 rounded-full bg-white/10 blur-3xl"
       />
 
-      <FloatingVideo
-        src="/assets/videos/IMG_6801.MOV"
-        aspectClass="aspect-[9/16]"
-        widthClass="w-24 sm:w-32 md:w-36"
-        label="Corvette C8"
-        floatDelay={0}
-        floatDuration={4.5}
-        rotate={-6}
-        className="bottom-14 left-2 hidden sm:block sm:left-4 md:left-10 lg:left-20"
-      />
-
-      <FloatingVideo
-        src="/assets/videos/Moment-App-20220726200053407.mov"
-        aspectClass="aspect-[6/5]"
-        widthClass="w-28 sm:w-36 md:w-40"
-        label="BMW M5"
-        floatDelay={0.8}
-        floatDuration={5.2}
-        rotate={5}
-        className="right-2 top-20 hidden sm:block sm:right-4 md:right-10 lg:right-20"
-      />
-
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -249,16 +122,6 @@ export default function Hero() {
         >
           View the Work
         </a>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="relative z-20 mt-8 flex gap-4 sm:hidden"
-      >
-        <MobileVideo src="/assets/videos/IMG_6801.MOV" label="Corvette C8" />
-        <MobileVideo src="/assets/videos/Moment-App-20220726200053407.mov" label="BMW M5" />
       </motion.div>
 
       <motion.div
