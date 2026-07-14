@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 function SpeakerMutedIcon() {
@@ -24,8 +24,6 @@ const VIDEOS = [
   { src: "/assets/videos/Moment-App-20220726200053407.mov", label: "BMW M5" },
 ];
 
-const AUTO_ADVANCE_MS = 5500;
-
 // Each stacked card's look, keyed by how many slots behind the active card it sits.
 const STACK_STYLES = [
   { x: "0%", y: 0, scale: 1, rotate: 0, opacity: 1, zIndex: 30 },
@@ -36,16 +34,31 @@ const STACK_STYLES = [
 export default function VideoCarousel() {
   const [active, setActive] = useState(0);
   const [muted, setMuted] = useState(true);
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
 
+  // Each video plays through once; only the active one advances the carousel
+  // when it naturally finishes, so a clip never gets cut off mid-reveal.
   useEffect(() => {
-    const id = setInterval(() => {
-      setActive((a) => (a + 1) % VIDEOS.length);
-    }, AUTO_ADVANCE_MS);
-    return () => clearInterval(id);
-  }, []);
+    VIDEOS.forEach((_, index) => {
+      const el = videoRefs.current[index];
+      if (!el) return;
+      if (index === active) {
+        el.currentTime = 0;
+        el.play().catch(() => {});
+      } else {
+        el.pause();
+        el.currentTime = 0;
+      }
+    });
+  }, [active]);
 
   function goTo(index: number) {
     setActive(index);
+  }
+
+  function handleEnded(index: number) {
+    if (index !== active) return;
+    setActive((a) => (a + 1) % VIDEOS.length);
   }
 
   return (
@@ -91,11 +104,13 @@ export default function VideoCarousel() {
               >
                 <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_30px_80px_-20px_rgba(216,31,38,0.45)]">
                   <video
+                    ref={(el) => {
+                      videoRefs.current[index] = el;
+                    }}
                     src={video.src}
-                    autoPlay
                     muted={muted}
-                    loop
                     playsInline
+                    onEnded={() => handleEnded(index)}
                     className="h-full w-full bg-black object-cover"
                   />
                 </div>
